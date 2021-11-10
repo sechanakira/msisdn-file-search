@@ -37,8 +37,9 @@ func splitFile() {
 
 	fmt.Printf("Spliting into %d parts", totalPartsNum)
 
-	for i := uint64(0); i <= totalPartsNum; i++ {
+	for i := uint64(0); i < totalPartsNum; i++ {
 		partSize := int(math.Min(fileChunk, float64(fileSize-int64(i*fileChunk))))
+
 		partBuffer := make([]byte, partSize)
 
 		file.Read(partBuffer)
@@ -54,6 +55,7 @@ func splitFile() {
 		ioutil.WriteFile(fileName, partBuffer, os.ModeAppend)
 
 		fmt.Println("Split to : ", fileName)
+
 	}
 
 }
