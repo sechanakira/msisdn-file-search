@@ -13,8 +13,30 @@ var fileDir string = "C:\\Users\\QXZ1TD8\\Desktop\\SuRE\\working_dir\\data.txt"
 
 var outputDir = "C:\\Users\\QXZ1TD8\\Desktop\\SuRE\\working_dir\\output_dir\\"
 
+type subscriberData struct {
+	msisdn          string
+	countoforigin   string
+	dob             string
+	dod             string
+	firstname       string
+	lastname        string
+	issuingCountry  string
+	registrarstatus string
+	status          string
+	postaladdress   string
+	physicaladdress string
+	title           string
+	companyName     string
+	gender          string
+	occupation      string
+}
+
 func main() {
 	splitFile()
+}
+
+func msisdnSearch(msisdn string) (error, subscriberData) {
+	return nil, subscriberData{}
 }
 
 func splitFile() {
