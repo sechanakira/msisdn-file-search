@@ -7,6 +7,7 @@ import (
 	"math"
 	"os"
 	"strconv"
+	"strings"
 )
 
 var fileDir string = "C:\\Users\\QXZ1TD8\\Desktop\\SuRE\\working_dir\\data.txt"
@@ -31,12 +32,96 @@ type subscriberData struct {
 	occupation      string
 }
 
-func main() {
-	splitFile()
+type searchResult struct {
+	fileName string
+	found    bool
+	content  string
 }
 
-func msisdnSearch(msisdn string) (error, subscriberData) {
-	return nil, subscriberData{}
+func main() {
+	entries, err := os.ReadDir(outputDir)
+
+	if err != nil {
+		log.Fatal("Failed to read output directory: ", outputDir)
+		os.Exit(1)
+	}
+
+	if len(entries) == 0 {
+		splitFile()
+	}
+
+	sr, _ := msisdnSearch("263775551045")
+
+	fmt.Println(sr)
+}
+
+func msisdnSearch(msisdn string) (subscriberData, error) {
+	sb := subscriberData{}
+
+	dirEntry, err := os.ReadDir(outputDir)
+
+	c := make(chan searchResult)
+
+	if err != nil {
+		log.Fatal("Failed to read from directory: ", outputDir)
+	} else {
+		for _, entry := range dirEntry {
+			go searchFile(entry.Name(), msisdn, c)
+		}
+	}
+
+	for i := 1; i <= len(dirEntry); i++ {
+		sr := <-c
+
+		if sr.found {
+			data := strings.Split(strings.ReplaceAll(sr.content, `"`, ""), "|")
+
+			sb.msisdn = data[0]
+			sb.countoforigin = data[1]
+			sb.dob = data[2]
+			sb.dod = data[3]
+			sb.firstname = data[4]
+			sb.lastname = data[5]
+			sb.issuingCountry = data[6]
+			sb.registrarstatus = data[7]
+			sb.status = data[8]
+			sb.postaladdress = data[9]
+			sb.physicaladdress = data[10]
+			sb.title = data[11]
+			sb.companyName = data[13]
+			sb.gender = data[14]
+			sb.occupation = data[15]
+		}
+	}
+
+	return sb, nil
+}
+
+func searchFile(fileName string, searchParam string, c chan searchResult) {
+	bs, err := os.ReadFile(outputDir + fileName)
+
+	sr := searchResult{
+		fileName: fileName,
+		found:    false,
+	}
+
+	if err != nil {
+		log.Fatal("Failed to open file: ", fileName)
+	} else {
+		fileContent := string(bs)
+
+		lines := strings.Split(fileContent, "\r\n")
+
+		for _, line := range lines {
+
+			if strings.Contains(line, searchParam) {
+				sr.found = true
+				sr.content = line
+			}
+		}
+	}
+
+	c <- sr
 }
 
 func splitFile() {
