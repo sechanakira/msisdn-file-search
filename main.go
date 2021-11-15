@@ -8,6 +8,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 var fileDir string = "C:\\Users\\QXZ1TD8\\Desktop\\SuRE\\working_dir\\data.txt"
@@ -17,8 +18,8 @@ var outputDir = "C:\\Users\\QXZ1TD8\\Desktop\\SuRE\\working_dir\\output_dir\\"
 type subscriberData struct {
 	msisdn          string
 	countoforigin   string
-	dob             string
-	dod             string
+	dob             time.Time
+	dod             time.Time
 	firstname       string
 	lastname        string
 	issuingCountry  string
@@ -50,7 +51,7 @@ func main() {
 		splitFile()
 	}
 
-	sr, _ := msisdnSearch("263775551045")
+	sr, _ := msisdnSearch("263774344508")
 
 	fmt.Println(sr)
 }
@@ -78,8 +79,6 @@ func msisdnSearch(msisdn string) (subscriberData, error) {
 
 			sb.msisdn = data[0]
 			sb.countoforigin = data[1]
-			sb.dob = data[2]
-			sb.dod = data[3]
 			sb.firstname = data[4]
 			sb.lastname = data[5]
 			sb.issuingCountry = data[6]
@@ -91,6 +90,13 @@ func msisdnSearch(msisdn string) (subscriberData, error) {
 			sb.companyName = data[13]
 			sb.gender = data[14]
 			sb.occupation = data[15]
+
+			dob, _ := time.Parse("2006-01-02 15:04:05", data[2])
+			dod, _ := time.Parse("2006-01-02 15:04:05", data[3])
+
+			sb.dob = dob
+			sb.dod = dod
+
 		}
 	}
 
