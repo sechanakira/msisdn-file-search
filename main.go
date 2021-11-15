@@ -11,9 +11,11 @@ import (
 	"time"
 )
 
-var fileDir string = "C:\\Users\\QXZ1TD8\\Desktop\\SuRE\\working_dir\\data.txt"
-
-var outputDir = "C:\\Users\\QXZ1TD8\\Desktop\\SuRE\\working_dir\\output_dir\\"
+const (
+	layout    = "2006-01-02 15:04:05"
+	fileDir   = "C:\\Users\\QXZ1TD8\\Desktop\\SuRE\\working_dir\\data.txt"
+	outputDir = "C:\\Users\\QXZ1TD8\\Desktop\\SuRE\\working_dir\\output_dir\\"
+)
 
 type subscriberData struct {
 	msisdn          string
@@ -91,8 +93,8 @@ func msisdnSearch(msisdn string) (subscriberData, error) {
 			sb.gender = data[14]
 			sb.occupation = data[15]
 
-			dob, _ := time.Parse("2006-01-02 15:04:05", data[2])
-			dod, _ := time.Parse("2006-01-02 15:04:05", data[3])
+			dob, _ := time.Parse(layout, data[2])
+			dod, _ := time.Parse(layout, data[3])
 
 			sb.dob = dob
 			sb.dod = dod
