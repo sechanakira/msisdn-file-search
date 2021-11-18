@@ -58,6 +58,10 @@ func main() {
 	fmt.Println(sr)
 }
 
+func reaAllAndSave(){
+	;
+}
+
 func msisdnSearch(msisdn string) (subscriberData, error) {
 	sb := subscriberData{}
 
